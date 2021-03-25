@@ -1,16 +1,21 @@
 const axios = require('axios');
 
 const githubToken = process.env.GITHUB_TOKEN;
-function updateRepo(req, res, next) {
+
+function updateRepoAction(req, res, next) {
     const config = {
-        method: 'patch',
+        method: 'PATCH',
         url: `https://api.github.com/repos/${req.params.owner}/${req.params.name}`,
         headers: { 
-            'Authorization': `token ${githubToken}`
+            'Authorization': `token ${githubToken}`,
+            'Content-Type': 'application/json'
+        },
+        data: {
+            description: req.body.description
         }
     };
 
-    axios(config)
+    axios.request(config)
     .then(function (response) {
         res.rawResponse = response.data;
         return next();
@@ -21,4 +26,4 @@ function updateRepo(req, res, next) {
     });
 }
 
-module.exports = updateRepo;
+module.exports = updateRepoAction;
